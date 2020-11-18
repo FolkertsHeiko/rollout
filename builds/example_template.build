@@ -1,0 +1,15 @@
+#Actions for Default-template
+mkdir "./files/$SENSORNAME/etc"
+mkdir "./files/$SENSORNAME/etc/test"
+
+mkdir "./files/$SENSORNAME/root"
+
+## nsubstitute meta-configuration vars and write to files directory for this sensor
+envsubst <"./templates/$SENSORTEMPLATE/etc/test/config.lua" >"./files/$SENSORNAME/etc/test/config.lua"
+
+## copy static scripts
+cp ./templates/$SENSORTEMPLATE/root/*.sh ./files/$SENSORNAME/root/.
+
+#make executable
+chmod -R +x ./files/$SENSORNAME/root/*.sh
+
