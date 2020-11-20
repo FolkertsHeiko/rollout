@@ -8,6 +8,8 @@ cd "$(dirname "$0")" #Change working directory to location of this script
 source ./configs/rollout.config
 
 #check requirements
+REQUIREMENTS="ssh sshpass scp $REQUIREMENTS" #Add basic requirements
+echo "ROLLOUT: Checking requirements: \"$REQUIREMENTS\""
 for BINARY in $REQUIREMENTS; do
     which $BINARY >/dev/null
     if [ $? != 0 ]; then
@@ -15,6 +17,28 @@ for BINARY in $REQUIREMENTS; do
         exit 1
     fi
 done;
+
+HOST_NAME=()
+HOST_IP=()
+HOST_TEMPLATE=()
+
+#Parse main config
+for index in ${!HOSTS[*]}; do
+    i=1
+    for item in ${HOSTS[$index]}; do
+        case $i in
+            1)  HOST_NAME[$index]=$item
+                i=2;;
+            2)  HOST_IP[$index]=$item
+                i=3;;
+            3)  HOST_TEMPLATE[$index]=$item
+                i=4;;
+            4)  continue;;
+            *)  continue;;
+        esac
+    done
+    echo CONFIG: READ: ${HOST_NAME[$index]} @ ${HOST_IP[$index]} with template ${HOST_TEMPLATE[$index]}
+done
 
 #Write configs to deploy to ./files
 source ./scripts/build.sh
