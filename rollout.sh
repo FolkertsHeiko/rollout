@@ -57,10 +57,11 @@ for index in ${!HOST_NAME[*]}; do
     SENSORTEMPLATE="${HOST_TEMPLATE[$index]}"
     source ./scripts/config.sh $SENSORNAME $SENSORTEMPLATE >/dev/null #(re)set environment vars for this sensor (silently)
 
-    echo "ROLLOUT: SCP to $SENSORNAME ($USER@$SENSORIP:/tmp/$SENSORTEMPLATE-$SENSORNAME)..."
-    sshpass -p $PASS scp -r "./files/$SENSORNAME" $USER@$SENSORIP:/tmp/$SENSORTEMPLATE-$SENSORNAME
+    echo "ROLLOUT: SCP to $SENSORNAME (sshpass -p ******** scp -r \"./files/$SENSORNAME\" $USER@$SENSORIP:\"/tmp/$SENSORTEMPLATE-$SENSORNAME\")..."
+    sshpass -p $PASS scp -r "./files/$SENSORNAME" $USER@$SENSORIP:"/tmp/$SENSORTEMPLATE-$SENSORNAME"
     if [ $? != 0 ]; then #ERROR Handling
         echo -e "ROLLOUT: SCP: \e[31mFailed\e[39m"
+        echo "ROLLOUT: Check username, password, IP *and* contents of  ~/.ssh/known_hosts (use ssh prior to rollout)!"
         continue
     else
         echo -e "ROLLOUT: SCP: \e[32mSuccess\e[39m"
